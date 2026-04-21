@@ -1,21 +1,337 @@
-// Import the functions you need from the SDKs you need
-import { initializeApp } from "firebase/app";
-import { getAnalytics } from "firebase/analytics";
-// TODO: Add SDKs for Firebase products that you want to use
-// https://firebase.google.com/docs/web/setup#available-libraries
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Department Project Submission Portal</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap');
+        body { font-family: 'Inter', sans-serif; }
+        .hide { display: none; }
+        .custom-shadow { box-shadow: 0 10px 30px -5px rgba(0, 0, 0, 0.1), 0 4px 15px -5px rgba(0, 0, 0, 0.05); }
+    </style>
+</head>
+<body class="bg-[#F9FAFB] text-slate-900 min-h-screen">
 
-// Your web app's Firebase configuration
-// For Firebase JS SDK v7.20.0 and later, measurementId is optional
-const firebaseConfig = {
-  apiKey: "AIzaSyANQnFD0CZP4WNxIBdrU-f7fEZ2Dzeau7o",
-  authDomain: "minor-project-cc578.firebaseapp.com",
-  projectId: "minor-project-cc578",
-  storageBucket: "minor-project-cc578.firebasestorage.app",
-  messagingSenderId: "33910606520",
-  appId: "1:33910606520:web:cb37ba9929bb534e34c24d",
-  measurementId: "G-1YR4ESLQWK"
-};
+    <!-- Professional Navigation -->
+    <nav class="bg-white border-b border-slate-200 sticky top-0 z-50">
+        <div class="max-w-6xl mx-auto px-6 h-24 flex items-center justify-between">
+            <div class="flex items-center gap-4">
+                <div class="bg-slate-900 p-3 rounded shadow-lg">
+                    <i class="fas fa-graduation-cap text-white text-xl"></i>
+                </div>
+                <div>
+                    <span class="font-extrabold text-xl block leading-none text-slate-800 tracking-tight uppercase">Department Portal</span>
+                    <span class="text-[10px] uppercase tracking-widest text-slate-500 font-bold mt-1 block">Project Repository System</span>
+                </div>
+            </div>
+            <div class="flex bg-slate-100 p-1.5 rounded-xl border border-slate-200">
+                <button id="nav-submit" class="px-6 py-2.5 rounded-lg text-[10px] font-black uppercase tracking-widest bg-white shadow-sm text-blue-700 transition-all">Upload Form</button>
+                <button id="nav-admin" class="px-6 py-2.5 rounded-lg text-[10px] font-black uppercase tracking-widest text-slate-500 hover:text-slate-800 transition-all">Faculty Dashboard</button>
+            </div>
+        </div>
+    </nav>
 
-// Initialize Firebase
-const app = initializeApp(firebaseConfig);
-const analytics = getAnalytics(app);
+    <main class="max-w-6xl mx-auto py-12 px-6">
+        
+        <!-- View: Submission Form -->
+        <div id="view-submit" class="max-w-3xl mx-auto">
+            <div class="bg-white rounded-2xl border border-slate-200 custom-shadow overflow-hidden">
+                <div class="bg-slate-50 border-b border-slate-200 p-10 text-center">
+                    <h1 class="text-3xl font-black text-slate-800 tracking-tight">Final Submission</h1>
+                    <p class="text-slate-500 text-sm mt-2">Complete all fields below. Duplicate titles will be automatically rejected.</p>
+                </div>
+                
+                <form id="submission-form" class="p-8 md:p-12 space-y-8">
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                        <div class="space-y-2">
+                            <label class="text-[11px] font-black text-slate-400 uppercase tracking-widest ml-1">Candidate Name(s) *</label>
+                            <input required type="text" id="studentName" placeholder="Full Name" class="w-full px-5 py-4 bg-white border border-slate-300 rounded-xl focus:border-blue-600 focus:ring-4 focus:ring-blue-600/5 outline-none font-semibold transition-all" />
+                        </div>
+                        <div class="space-y-2">
+                            <label class="text-[11px] font-black text-slate-400 uppercase tracking-widest ml-1">ID / Roll Number *</label>
+                            <input required type="text" id="rollNo" placeholder="Official ID" class="w-full px-5 py-4 bg-white border border-slate-300 rounded-xl focus:border-blue-600 focus:ring-4 focus:ring-blue-600/5 outline-none font-semibold transition-all" />
+                        </div>
+                    </div>
+
+                    <div class="space-y-2">
+                        <div class="flex justify-between px-1">
+                            <label class="text-[11px] font-black text-slate-400 uppercase tracking-widest">Project Title *</label>
+                            <span id="title-status" class="text-[10px] font-bold uppercase"></span>
+                        </div>
+                        <input required type="text" id="projectName" placeholder="Enter unique project title" class="w-full px-5 py-4 bg-white border border-slate-300 rounded-xl focus:border-blue-600 focus:ring-4 focus:ring-blue-600/5 outline-none font-semibold transition-all" />
+                    </div>
+
+                    <div class="space-y-2">
+                        <label class="text-[11px] font-black text-slate-400 uppercase tracking-widest ml-1">GitHub Link (Public)</label>
+                        <input type="url" id="githubLink" placeholder="https://github.com/..." class="w-full px-5 py-4 bg-white border border-slate-300 rounded-xl outline-none font-semibold transition-all" />
+                    </div>
+
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                        <label class="flex flex-col items-center p-6 border-2 border-dashed rounded-2xl cursor-pointer hover:bg-blue-50 transition-all border-slate-200 group" id="label-ppt">
+                            <input type="file" id="file-ppt" class="hide" accept=".ppt,.pptx,.pdf" />
+                            <i class="fas fa-file-powerpoint text-slate-300 text-3xl mb-3 group-hover:text-blue-500"></i>
+                            <span class="text-[10px] font-black uppercase text-slate-500">Project PPT</span>
+                        </label>
+                        <label class="flex flex-col items-center p-6 border-2 border-dashed rounded-2xl cursor-pointer hover:bg-blue-50 transition-all border-slate-200 group" id="label-report">
+                            <input type="file" id="file-report" class="hide" accept=".pdf" />
+                            <i class="fas fa-file-pdf text-slate-300 text-3xl mb-3 group-hover:text-blue-500"></i>
+                            <span class="text-[10px] font-black uppercase text-slate-500">Project PDF</span>
+                        </label>
+                        <label class="flex flex-col items-center p-6 border-2 border-dashed rounded-2xl cursor-pointer hover:bg-blue-50 transition-all border-slate-200 group" id="label-code">
+                            <input type="file" id="file-code" class="hide" accept=".zip,.rar" />
+                            <i class="fas fa-file-code text-slate-300 text-3xl mb-3 group-hover:text-blue-500"></i>
+                            <span class="text-[10px] font-black uppercase text-slate-500">Code ZIP</span>
+                        </label>
+                    </div>
+
+                    <button type="submit" id="btn-submit" class="w-full bg-slate-900 hover:bg-black text-white font-black py-5 rounded-2xl shadow-xl uppercase tracking-[0.2em] text-xs transition-all active:scale-95">
+                        Transmit Data
+                    </button>
+                </form>
+            </div>
+            <p class="text-center text-slate-400 text-[10px] mt-10 font-bold uppercase tracking-[0.3em]">Official Department Archive Portal &bull; SSL Secured</p>
+        </div>
+
+        <!-- View: Success Message -->
+        <div id="view-success" class="hide max-w-md mx-auto text-center py-20">
+            <div class="bg-white p-12 rounded-3xl shadow-2xl border border-slate-200">
+                <div class="w-24 h-24 bg-emerald-50 rounded-full flex items-center justify-center mx-auto mb-8 border border-emerald-100">
+                    <i class="fas fa-check text-emerald-500 text-4xl"></i>
+                </div>
+                <h2 class="text-3xl font-black text-slate-800 tracking-tight">Submission Filed</h2>
+                <p class="text-slate-500 text-sm mt-3 mb-10 leading-relaxed">Your project documentation has been successfully verified and stored in the department database.</p>
+                <button onclick="window.location.reload()" class="w-full bg-slate-900 text-white font-black py-5 rounded-2xl shadow-lg hover:bg-black transition-all">Submit Another</button>
+            </div>
+        </div>
+
+        <!-- View: Admin Login -->
+        <div id="view-login" class="hide max-w-md mx-auto py-20 text-center">
+            <div class="bg-white p-12 rounded-3xl border border-slate-200 shadow-2xl">
+                <div class="w-20 h-20 bg-slate-50 border border-slate-100 rounded-full flex items-center justify-center mx-auto mb-8">
+                    <i class="fas fa-shield-alt text-slate-400 text-3xl"></i>
+                </div>
+                <h2 class="text-2xl font-black text-slate-800 tracking-tight">Faculty Access</h2>
+                <form id="login-form" class="mt-8 space-y-5">
+                    <input required type="password" id="admin-pass" placeholder="Authorization Key" class="w-full px-6 py-5 bg-slate-50 border border-slate-200 rounded-2xl text-center font-bold tracking-widest outline-none focus:ring-4 focus:ring-blue-600/5 transition-all" />
+                    <button type="submit" class="w-full bg-slate-900 text-white font-black py-5 rounded-2xl text-xs uppercase tracking-[0.2em] shadow-lg hover:bg-black transition-all">Decrypt Records</button>
+                </form>
+            </div>
+        </div>
+
+        <!-- View: Admin Dashboard -->
+        <div id="view-dashboard" class="hide space-y-10">
+            <div class="flex flex-col md:flex-row md:items-end justify-between gap-6">
+                <div>
+                    <h2 class="text-4xl font-black text-slate-900 tracking-tight">Project Records</h2>
+                    <div class="flex items-center gap-3 mt-3">
+                        <div class="w-2.5 h-2.5 rounded-full bg-emerald-500 animate-pulse"></div>
+                        <p id="counter" class="text-slate-500 font-bold text-[10px] uppercase tracking-[0.2em]">Syncing Repository...</p>
+                    </div>
+                </div>
+                <div class="flex gap-4">
+                    <button id="btn-export" class="flex items-center gap-3 px-8 py-4 bg-emerald-600 text-white rounded-2xl font-black text-[10px] uppercase tracking-widest hover:bg-emerald-700 transition-all shadow-xl">
+                        <i class="fas fa-file-csv text-lg"></i> Export CSV
+                    </button>
+                </div>
+            </div>
+
+            <div class="bg-white border border-slate-200 rounded-3xl shadow-sm overflow-hidden">
+                <div class="overflow-x-auto">
+                    <table class="w-full text-left text-sm min-w-[1000px]">
+                        <thead class="bg-slate-50 border-b border-slate-200 text-[11px] font-black uppercase text-slate-500 tracking-[0.2em]">
+                            <tr>
+                                <th class="px-10 py-6">Identity</th>
+                                <th class="px-10 py-6">Project Title</th>
+                                <th class="px-10 py-6 text-center">Deliverables</th>
+                                <th class="px-10 py-6 text-right">Filed On</th>
+                            </tr>
+                        </thead>
+                        <tbody id="table-body" class="divide-y divide-slate-100">
+                            <!-- Data -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            
+            <div class="flex justify-center">
+                <button onclick="window.location.reload()" class="text-slate-400 hover:text-red-600 text-[11px] font-black uppercase tracking-[0.3em] flex items-center gap-3 transition-colors">
+                    <i class="fas fa-power-off"></i> Secure Logout / Terminate
+                </button>
+            </div>
+        </div>
+    </main>
+
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
+        import { getFirestore, collection, addDoc, onSnapshot, query, getDocs, where } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+        import { getAuth, signInAnonymously } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
+
+        // ==========================================
+        // FIREBASE INTEGRATION FROM YOUR SCREENSHOT
+        // ==========================================
+        const firebaseConfig = {
+            apiKey: "AIzaSyANQnFD0CZP4WNxIBdrU-f7FEZ2Dzeau7o",
+            authDomain: "minor-project-cc578.firebaseapp.com",
+            projectId: "minor-project-cc578",
+            storageBucket: "minor-project-cc578.firebasestorage.app",
+            messagingSenderId: "33910606520",
+            appId: "1:33910606520:web:cb37ba9929bb534e34c24d"
+        };
+        // ==========================================
+
+        const app = initializeApp(firebaseConfig);
+        const db = getFirestore(app);
+        const auth = getAuth(app);
+        
+        const ADMIN_PASS = "admin123";
+        let submissions = [];
+
+        // UI Management
+        const navSubmit = document.getElementById('nav-submit');
+        const navAdmin = document.getElementById('nav-admin');
+        const views = {
+            submit: document.getElementById('view-submit'),
+            success: document.getElementById('view-success'),
+            login: document.getElementById('view-login'),
+            dashboard: document.getElementById('view-dashboard')
+        };
+
+        const showView = (name) => {
+            Object.keys(views).forEach(k => views[k].classList.add('hide'));
+            views[name].classList.remove('hide');
+            navSubmit.className = "px-6 py-2.5 rounded-lg text-[10px] font-black uppercase tracking-widest transition-all " + (name === 'submit' ? 'bg-white shadow-sm text-blue-700' : 'text-slate-500');
+            navAdmin.className = "px-6 py-2.5 rounded-lg text-[10px] font-black uppercase tracking-widest transition-all " + (name === 'dashboard' || name === 'login' ? 'bg-white shadow-sm text-blue-700' : 'text-slate-500');
+        };
+
+        navSubmit.onclick = () => showView('submit');
+        navAdmin.onclick = () => showView('login');
+
+        // File Converter
+        const fileToBase64 = (file) => {
+            return new Promise((resolve) => {
+                const reader = new FileReader();
+                reader.readAsDataURL(file);
+                reader.onload = () => resolve({ name: file.name, data: reader.result });
+            });
+        };
+
+        // File Selection Feedback
+        ['ppt', 'report', 'code'].forEach(k => {
+            document.getElementById(`file-${k}`).onchange = function() {
+                const label = document.getElementById(`label-${k}`);
+                if (this.files[0]) {
+                    label.classList.add('bg-blue-50', 'border-blue-400');
+                    label.querySelector('i').className = "fas fa-check-circle text-blue-600 text-3xl mb-3";
+                }
+            };
+        });
+
+        // Form Submission
+        document.getElementById('submission-form').onsubmit = async (e) => {
+            e.preventDefault();
+            const btn = document.getElementById('btn-submit');
+            btn.disabled = true;
+            btn.innerHTML = `<i class="fas fa-circle-notch fa-spin mr-2"></i> Transmitting...`;
+
+            const name = document.getElementById('studentName').value;
+            const roll = document.getElementById('rollNo').value;
+            const title = document.getElementById('projectName').value.trim();
+            const github = document.getElementById('githubLink').value;
+            
+            const filePpt = document.getElementById('file-ppt').files[0];
+            const fileReport = document.getElementById('file-report').files[0];
+            const fileCode = document.getElementById('file-code').files[0];
+
+            if (!filePpt || !fileReport || !fileCode) {
+                alert("Missing Assets. Ensure PPT, PDF, and ZIP are selected.");
+                btn.disabled = false;
+                btn.innerText = "Transmit Data";
+                return;
+            }
+
+            try {
+                await signInAnonymously(auth);
+                
+                // Duplicate check
+                const q = query(collection(db, "submissions"), where("projectName", "==", title));
+                const snap = await getDocs(q);
+                if (!snap.empty) {
+                    alert("This Project Title is already registered. Use a unique title.");
+                    btn.disabled = false;
+                    btn.innerText = "Transmit Data";
+                    return;
+                }
+
+                const ppt = await fileToBase64(filePpt);
+                const report = await fileToBase64(fileReport);
+                const code = await fileToBase64(fileCode);
+
+                await addDoc(collection(db, "submissions"), {
+                    studentName: name, rollNo: roll, projectName: title, githubLink: github,
+                    ppt, report, code, timestamp: new Date().toISOString()
+                });
+                showView('success');
+            } catch (err) {
+                alert("Storage Limit Error. Keep files under 900KB.");
+                btn.disabled = false;
+                btn.innerText = "Transmit Data";
+            }
+        };
+
+        // Admin Access
+        document.getElementById('login-form').onsubmit = (e) => {
+            e.preventDefault();
+            if (document.getElementById('admin-pass').value === ADMIN_PASS) {
+                showView('dashboard');
+            } else {
+                alert("Authorisation Denied");
+            }
+        };
+
+        // Real-time Database Observer
+        onSnapshot(query(collection(db, "submissions")), (snap) => {
+            submissions = snap.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+            submissions.sort((a,b) => new Date(b.timestamp) - new Date(a.timestamp));
+            
+            document.getElementById('counter').innerText = `${submissions.length} Verified Records`;
+            const body = document.getElementById('table-body');
+            body.innerHTML = submissions.map(s => `
+                <tr class="hover:bg-slate-50 transition-all duration-300">
+                    <td class="px-10 py-6">
+                        <div class="font-bold text-slate-800 text-base">${s.studentName}</div>
+                        <div class="text-[10px] text-slate-400 font-bold uppercase tracking-widest mt-1">${s.rollNo}</div>
+                    </td>
+                    <td class="px-10 py-6">
+                        <div class="font-bold text-slate-700 max-w-sm truncate text-sm">${s.projectName}</div>
+                        ${s.githubLink ? `<a href="${s.githubLink}" target="_blank" class="text-[10px] text-blue-600 font-black uppercase tracking-widest hover:underline mt-2 inline-flex items-center gap-2"><i class="fab fa-github"></i> Repository</a>` : ''}
+                    </td>
+                    <td class="px-10 py-6">
+                        <div class="flex justify-center gap-3">
+                            <button onclick="window.download('${s.ppt.data}', '${s.ppt.name}')" class="w-12 h-12 bg-slate-100 rounded-2xl text-orange-600 flex items-center justify-center hover:bg-orange-600 hover:text-white transition-all shadow-sm" title="PPT Source"><i class="fas fa-file-powerpoint text-lg"></i></button>
+                            <button onclick="window.download('${s.report.data}', '${s.report.name}')" class="w-12 h-12 bg-slate-100 rounded-2xl text-blue-600 flex items-center justify-center hover:bg-blue-600 hover:text-white transition-all shadow-sm" title="Report PDF"><i class="fas fa-file-pdf text-lg"></i></button>
+                            <button onclick="window.download('${s.code.data}', '${s.code.name}')" class="w-12 h-12 bg-slate-100 rounded-2xl text-emerald-600 flex items-center justify-center hover:bg-emerald-600 hover:text-white transition-all shadow-sm" title="Source Code"><i class="fas fa-file-code text-lg"></i></button>
+                        </div>
+                    </td>
+                    <td class="px-10 py-6 text-right font-black text-slate-400 text-[11px] tracking-widest">
+                        ${new Date(s.timestamp).toLocaleDateString()}
+                    </td>
+                </tr>
+            `).join('');
+        });
+
+        window.download = (data, name) => {
+            const a = document.createElement('a'); a.href = data; a.download = name; a.click();
+        };
+
+        document.getElementById('btn-export').onclick = () => {
+            const csv = ["Candidate,ID,Title,Github,Date", ...submissions.map(s => `"${s.studentName}","${s.rollNo}","${s.projectName}","${s.githubLink}","${s.timestamp}"`)].join("\n");
+            const blob = new Blob([csv], { type: 'text/csv' });
+            window.download(URL.createObjectURL(blob), "Department_Records.csv");
+        };
+
+    </script>
+</body>
+</html>
