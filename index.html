@@ -1,65 +1,21 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Department Project Submission Portal</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
-    <style>
-        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&display=swap');
-        body { font-family: 'Inter', sans-serif; }
-    </style>
-</head>
-<body class="bg-slate-50 text-slate-900">
+// Import the functions you need from the SDKs you need
+import { initializeApp } from "firebase/app";
+import { getAnalytics } from "firebase/analytics";
+// TODO: Add SDKs for Firebase products that you want to use
+// https://firebase.google.com/docs/web/setup#available-libraries
 
-    <div id="root">
-        <!-- The application will load here -->
-        <div class="min-h-screen flex items-center justify-center">
-            <p class="text-slate-400 font-bold animate-pulse uppercase tracking-widest">Initialising Secure Portal...</p>
-        </div>
-    </div>
+// Your web app's Firebase configuration
+// For Firebase JS SDK v7.20.0 and later, measurementId is optional
+const firebaseConfig = {
+  apiKey: "AIzaSyANQnFD0CZP4WNxIBdrU-f7fEZ2Dzeau7o",
+  authDomain: "minor-project-cc578.firebaseapp.com",
+  projectId: "minor-project-cc578",
+  storageBucket: "minor-project-cc578.firebasestorage.app",
+  messagingSenderId: "33910606520",
+  appId: "1:33910606520:web:cb37ba9929bb534e34c24d",
+  measurementId: "G-1YR4ESLQWK"
+};
 
-    <!-- 
-      NOTE: To make this work outside of Gemini, you must replace the 
-      placeholder below with your actual Firebase Configuration from the Firebase Console.
-    -->
-    <script type="module">
-        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
-        import { getFirestore, collection, addDoc, onSnapshot, query } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
-        import { getAuth, signInAnonymously } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
-
-        // IMPORTANT: Replace this with your own Firebase Config
-        const firebaseConfig = {
-            apiKey: "YOUR_API_KEY",
-            authDomain: "YOUR_PROJECT.firebaseapp.com",
-            projectId: "YOUR_PROJECT_ID",
-            storageBucket: "YOUR_PROJECT.appspot.com",
-            messagingSenderId: "YOUR_ID",
-            appId: "YOUR_APP_ID"
-        };
-
-        // For now, this will show a message explaining that a Firebase Config is needed
-        document.getElementById('root').innerHTML = `
-            <div class="min-h-screen flex flex-col items-center justify-center p-6 text-center">
-                <div class="bg-white p-10 rounded-xl shadow-xl border border-slate-200 max-w-lg">
-                    <div class="bg-slate-900 w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-6">
-                        <i class="fas fa-graduation-cap text-white text-2xl"></i>
-                    </div>
-                    <h1 class="text-2xl font-bold mb-4 uppercase tracking-tight">System Ready for Hosting</h1>
-                    <p class="text-slate-600 text-sm mb-8 leading-relaxed">
-                        To activate this portal on GitHub, you need to connect your own <strong>Firebase Database</strong>. 
-                        This ensures you own the data and it stays private to your department.
-                    </p>
-                    <div class="bg-slate-50 p-4 rounded text-left text-xs font-mono text-slate-500 mb-6 border border-slate-100">
-                        1. Go to console.firebase.google.com<br>
-                        2. Create a project "Minor-Project"<br>
-                        3. Copy the "Web Config" into this file.
-                    </div>
-                    <p class="text-[10px] text-slate-400 font-bold uppercase tracking-widest">Official Department Submission System</p>
-                </div>
-            </div>
-        `;
-    </script>
-</body>
-</html>
+// Initialize Firebase
+const app = initializeApp(firebaseConfig);
+const analytics = getAnalytics(app);
