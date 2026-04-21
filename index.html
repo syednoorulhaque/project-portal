@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Department Project Submission Portal</title>
+    <title>MCA Project Submission Portal</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <style>
@@ -12,65 +12,72 @@
         .hide { display: none; }
         .custom-shadow { box-shadow: 0 10px 30px -5px rgba(0, 0, 0, 0.1), 0 4px 15px -5px rgba(0, 0, 0, 0.05); }
         .autocomplete-items {
-            position: absolute; border: 1px solid #d4d4d4; border-bottom: none; border-top: none; z-index: 99;
-            top: 100%; left: 0; right: 0; background-color: #fff; border-radius: 0 0 10px 10px; overflow: hidden;
+            position: absolute; border: 1px solid #e2e8f0; border-top: none; z-index: 99;
+            top: 100%; left: 0; right: 0; background-color: #fff; border-radius: 0 0 12px 12px; 
+            overflow-y: auto; max-height: 250px; box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
         }
-        .autocomplete-items div { padding: 10px; cursor: pointer; border-bottom: 1px solid #d4d4d4; font-size: 13px; }
-        .autocomplete-items div:hover { background-color: #e9e9e9; }
+        .autocomplete-items div { padding: 12px 16px; cursor: pointer; border-bottom: 1px solid #f1f5f9; font-size: 13px; font-weight: 500; }
+        .autocomplete-items div:hover { background-color: #f8fafc; color: #1d4ed8; }
     </style>
 </head>
-<body class="bg-[#F9FAFB] text-slate-900 min-h-screen">
+<body class="bg-[#F8FAFC] text-slate-900 min-h-screen">
 
     <nav class="bg-white border-b border-slate-200 sticky top-0 z-50">
         <div class="max-w-6xl mx-auto px-6 h-24 flex items-center justify-between">
             <div class="flex items-center gap-4">
-                <div class="bg-slate-900 p-3 rounded shadow-lg">
+                <div class="bg-slate-900 p-3 rounded-xl shadow-lg">
                     <i class="fas fa-graduation-cap text-white text-xl"></i>
                 </div>
                 <div>
-                    <span class="font-extrabold text-lg block leading-none text-slate-800 tracking-tight uppercase">Department Portal</span>
-                    <span class="text-[10px] uppercase tracking-widest text-slate-500 font-bold mt-1 block">Advanced Submission System</span>
+                    <span class="font-extrabold text-lg block leading-none text-slate-800 tracking-tight uppercase">MCA Department</span>
+                    <span class="text-[10px] uppercase tracking-widest text-slate-500 font-bold mt-1 block">Major Project Repository</span>
                 </div>
             </div>
-            <div class="flex bg-slate-100 p-1.5 rounded-lg border border-slate-200">
+            <div class="flex bg-slate-100 p-1.5 rounded-xl border border-slate-200">
                 <button id="nav-submit" class="px-6 py-2.5 rounded-lg text-[10px] font-black uppercase tracking-widest bg-white shadow-sm text-blue-700 transition-all">Submission</button>
-                <button id="nav-admin" class="px-6 py-2.5 rounded-lg text-[10px] font-black uppercase tracking-widest text-slate-500 hover:text-slate-800 transition-all">Dashboard</button>
+                <button id="nav-admin" class="px-6 py-2.5 rounded-lg text-[10px] font-black uppercase tracking-widest text-slate-500 hover:text-slate-800 transition-all">Records</button>
             </div>
         </div>
     </nav>
 
     <main class="max-w-6xl mx-auto py-12 px-6">
         
-        <div id="view-submit" class="max-w-3xl mx-auto">
-            <div class="bg-white rounded-2xl border border-slate-200 custom-shadow overflow-hidden">
+        <div id="view-submit" class="max-w-3xl mx-auto animate-in fade-in duration-500">
+            <div class="bg-white rounded-2xl border border-slate-200 shadow-xl overflow-hidden">
                 <div class="bg-slate-50 border-b border-slate-200 p-10 text-center">
-                    <h1 class="text-3xl font-black text-slate-800 tracking-tight">Final Submission</h1>
-                    <p class="text-slate-500 text-sm mt-2">Enter your Roll Number to auto-fill details.</p>
+                    <h1 class="text-3xl font-black text-slate-800 tracking-tight">Project Submission</h1>
+                    <p class="text-slate-500 text-sm mt-2">Enter your Enrollment ID to verify assigned topic and upload files.</p>
                 </div>
                 
                 <form id="submission-form" class="p-8 md:p-12 space-y-8">
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
                         <div class="space-y-2 relative">
-                            <label class="text-[11px] font-black text-slate-400 uppercase tracking-widest ml-1">ID / Roll Number *</label>
-                            <input required type="text" id="rollNo" placeholder="Start typing Roll No..." class="w-full px-5 py-4 bg-white border border-slate-300 rounded-xl focus:border-blue-600 focus:ring-4 focus:ring-blue-600/5 outline-none font-semibold transition-all" />
+                            <label class="text-[11px] font-black text-slate-400 uppercase tracking-widest ml-1">Enrollment Number *</label>
+                            <div class="relative">
+                                <i class="fas fa-id-card absolute left-4 top-1/2 -translate-y-1/2 text-slate-400"></i>
+                                <input required type="text" id="rollNo" autocomplete="off" placeholder="e.g. GU25R..." class="w-full pl-11 pr-4 py-4 bg-white border border-slate-300 rounded-xl focus:border-blue-600 focus:ring-4 focus:ring-blue-600/5 outline-none font-semibold transition-all" />
+                            </div>
                             <div id="autocomplete-list" class="autocomplete-items hide"></div>
                         </div>
                         <div class="space-y-2">
-                            <label class="text-[11px] font-black text-slate-400 uppercase tracking-widest ml-1">Candidate Name(s) *</label>
-                            <input required type="text" id="studentName" placeholder="Full Name" class="w-full px-5 py-4 bg-white border border-slate-300 rounded-xl focus:border-blue-600 focus:ring-4 focus:ring-blue-600/5 outline-none font-semibold transition-all" />
+                            <label class="text-[11px] font-black text-slate-400 uppercase tracking-widest ml-1">Candidate Name *</label>
+                            <div class="relative">
+                                <i class="fas fa-user absolute left-4 top-1/2 -translate-y-1/2 text-slate-400"></i>
+                                <input required type="text" id="studentName" placeholder="Auto-filled" class="w-full pl-11 pr-4 py-4 bg-slate-50 border border-slate-300 rounded-xl outline-none font-semibold" readonly />
+                            </div>
                         </div>
                     </div>
 
                     <div class="space-y-2">
                         <div class="flex justify-between px-1">
-                            <label class="text-[11px] font-black text-slate-400 uppercase tracking-widest">Project Title *</label>
+                            <label class="text-[11px] font-black text-slate-400 uppercase tracking-widest">Project Title (Edit if changed) *</label>
                             <span id="title-status" class="text-[10px] font-bold uppercase"></span>
                         </div>
-                        <input required type="text" id="projectName" placeholder="Enter unique project title" class="w-full px-5 py-4 bg-white border border-slate-300 rounded-xl focus:border-blue-600 focus:ring-4 focus:ring-blue-600/5 outline-none font-semibold transition-all" />
+                        <input required type="text" id="projectName" placeholder="Assigned topic will appear here" class="w-full px-5 py-4 bg-white border border-slate-300 rounded-xl focus:border-blue-600 focus:ring-4 focus:ring-blue-600/5 outline-none font-semibold transition-all" />
                     </div>
 
                     <div class="space-y-2">
-                        <label class="text-[11px] font-black text-slate-400 uppercase tracking-widest ml-1">GitHub Link (Public)</label>
+                        <label class="text-[11px] font-black text-slate-400 uppercase tracking-widest ml-1">GitHub Link (Optional)</label>
                         <input type="url" id="githubLink" placeholder="https://github.com/..." class="w-full px-5 py-4 bg-white border border-slate-300 rounded-xl outline-none font-semibold transition-all" />
                     </div>
 
@@ -78,12 +85,12 @@
                         <label class="flex flex-col items-center p-6 border-2 border-dashed rounded-2xl cursor-pointer hover:bg-blue-50 transition-all border-slate-200 group" id="label-ppt">
                             <input type="file" id="file-ppt" class="hide" />
                             <i class="fas fa-file-powerpoint text-slate-300 text-3xl mb-3 group-hover:text-blue-500"></i>
-                            <span class="text-[10px] font-black uppercase text-slate-500">Project PPT</span>
+                            <span class="text-[10px] font-black uppercase text-slate-500">PPT Source</span>
                         </label>
                         <label class="flex flex-col items-center p-6 border-2 border-dashed rounded-2xl cursor-pointer hover:bg-blue-50 transition-all border-slate-200 group" id="label-report">
                             <input type="file" id="file-report" class="hide" />
                             <i class="fas fa-file-pdf text-slate-300 text-3xl mb-3 group-hover:text-blue-500"></i>
-                            <span class="text-[10px] font-black uppercase text-slate-500">Project PDF</span>
+                            <span class="text-[10px] font-black uppercase text-slate-500">Report PDF</span>
                         </label>
                         <label class="flex flex-col items-center p-6 border-2 border-dashed rounded-2xl cursor-pointer hover:bg-blue-50 transition-all border-slate-200 group" id="label-code">
                             <input type="file" id="file-code" class="hide" />
@@ -92,43 +99,52 @@
                         </label>
                     </div>
 
-                    <button type="submit" id="btn-submit" class="w-full bg-slate-900 hover:bg-black text-white font-black py-5 rounded-2xl shadow-xl uppercase tracking-[0.2em] text-xs transition-all active:scale-95">
-                        Start Upload
-                    </button>
-                    <div id="upload-progress" class="hide w-full bg-slate-100 h-2 rounded-full overflow-hidden">
-                        <div id="progress-bar" class="bg-blue-600 h-full transition-all duration-300" style="width: 0%"></div>
+                    <div id="upload-status" class="hide space-y-2">
+                        <div class="flex justify-between text-[10px] font-bold uppercase text-slate-500">
+                            <span>Transmitting Files...</span>
+                            <span id="progress-text">0%</span>
+                        </div>
+                        <div class="w-full bg-slate-100 h-2 rounded-full overflow-hidden">
+                            <div id="progress-bar" class="bg-blue-600 h-full transition-all duration-300" style="width: 0%"></div>
+                        </div>
                     </div>
+
+                    <button type="submit" id="btn-submit" class="w-full bg-slate-900 hover:bg-black text-white font-black py-5 rounded-2xl shadow-xl uppercase tracking-[0.2em] text-xs transition-all active:scale-95">
+                        Submit Deliverables
+                    </button>
                 </form>
             </div>
         </div>
 
-        <!-- Dashboard and Login remain similar but updated for new storage -->
         <div id="view-success" class="hide max-w-md mx-auto text-center py-20">
             <div class="bg-white p-12 rounded-3xl shadow-2xl border border-slate-200">
                 <i class="fas fa-check-circle text-emerald-500 text-6xl mb-6"></i>
-                <h2 class="text-2xl font-black">Success!</h2>
-                <button onclick="window.location.reload()" class="w-full mt-8 bg-slate-900 text-white py-4 rounded-xl font-bold uppercase text-xs tracking-widest">Back</button>
+                <h2 class="text-3xl font-black text-slate-800 tracking-tight">Recorded!</h2>
+                <p class="text-slate-500 text-sm mt-3 leading-relaxed">Your files have been filed successfully in the department database.</p>
+                <button onclick="window.location.reload()" class="w-full mt-10 bg-slate-900 text-white font-black py-5 rounded-2xl shadow-lg hover:bg-black transition-all">Submit Another</button>
             </div>
         </div>
 
-        <div id="view-login" class="hide max-w-md mx-auto py-20">
-            <div class="bg-white p-10 rounded-3xl border border-slate-200 shadow-2xl text-center">
-                <i class="fas fa-shield-alt text-slate-300 text-4xl mb-6"></i>
-                <h2 class="text-xl font-bold">Faculty Access</h2>
-                <form id="login-form" class="mt-8 space-y-4">
+        <div id="view-login" class="hide max-w-md mx-auto py-20 text-center">
+            <div class="bg-white p-12 rounded-3xl border border-slate-200 shadow-2xl">
+                <i class="fas fa-shield-alt text-slate-200 text-5xl mb-8"></i>
+                <h2 class="text-2xl font-black text-slate-800 tracking-tight">Faculty Login</h2>
+                <form id="login-form" class="mt-8 space-y-5">
                     <input required type="password" id="admin-pass" placeholder="Authorization Key" class="w-full px-6 py-5 bg-slate-50 border border-slate-200 rounded-2xl text-center font-bold tracking-widest outline-none" />
-                    <button type="submit" class="w-full bg-slate-900 text-white font-black py-4 rounded-xl text-xs uppercase tracking-widest">Unlock Dashboard</button>
+                    <button type="submit" class="w-full bg-slate-900 text-white font-black py-5 rounded-2xl text-xs uppercase tracking-[0.2em] shadow-lg">Unlock Records</button>
                 </form>
             </div>
         </div>
 
-        <div id="view-dashboard" class="hide space-y-10">
+        <div id="view-dashboard" class="hide space-y-10 animate-in slide-in-from-bottom-4 duration-700">
             <div class="flex flex-col md:flex-row md:items-end justify-between gap-6">
                 <div>
                     <h2 class="text-4xl font-black text-slate-900 tracking-tight">Project Records</h2>
-                    <p id="counter" class="text-slate-500 font-bold text-[10px] uppercase tracking-[0.2em] mt-2">Loading...</p>
+                    <p id="counter" class="text-slate-500 font-bold text-[10px] uppercase tracking-[0.2em] mt-2">Loading data...</p>
                 </div>
-                <button id="btn-export" class="px-8 py-4 bg-emerald-600 text-white rounded-2xl font-black text-[10px] uppercase tracking-widest hover:bg-emerald-700 transition-all shadow-xl">Export CSV</button>
+                <button id="btn-export" class="flex items-center gap-3 px-8 py-4 bg-emerald-600 text-white rounded-2xl font-black text-[10px] uppercase tracking-widest hover:bg-emerald-700 transition-all shadow-xl">
+                    <i class="fas fa-file-csv"></i> Export CSV
+                </button>
             </div>
 
             <div class="bg-white border border-slate-200 rounded-3xl shadow-sm overflow-hidden">
@@ -136,10 +152,10 @@
                     <table class="w-full text-left text-sm min-w-[1000px]">
                         <thead class="bg-slate-50 border-b border-slate-200 text-[11px] font-black uppercase text-slate-500 tracking-[0.2em]">
                             <tr>
-                                <th class="px-10 py-6">Identity</th>
-                                <th class="px-10 py-6">Project Title</th>
-                                <th class="px-10 py-6 text-center">Files</th>
-                                <th class="px-10 py-6 text-right">Filed On</th>
+                                <th class="px-10 py-6">Candidate</th>
+                                <th class="px-10 py-6">Project Details</th>
+                                <th class="px-10 py-6 text-center">Deliverables</th>
+                                <th class="px-10 py-6 text-right">Submitted</th>
                             </tr>
                         </thead>
                         <tbody id="table-body" class="divide-y divide-slate-100"></tbody>
@@ -165,12 +181,38 @@
             appId: "1:33910606520:web:cb37ba9929bb534e34c24d"
         };
 
-        // EDIT STUDENT LIST HERE
+        // MCA STUDENT ASSIGNMENT MASTER LIST
         const STUDENT_LIST = [
-            { roll: "21BCE102", name: "Rahul Kumar" },
-            { roll: "21BCE105", name: "Sneha Sharma" },
-            { roll: "21BCE110", name: "Amit Singh" },
-            { roll: "21BCE115", name: "Priya Patel" }
+            { roll: "GU25R1866", name: "ABHAY KUMAR", topic: "E-Commerce Backend (Java/Spring Boot)" },
+            { roll: "GU25R0538", name: "PRIYANSHU", topic: "Al-Powered Resume Screener (Python)" },
+            { roll: "GU25R1354", name: "AASHA CHAUHAN", topic: "Real-time Chat App / WhatsApp Clone (JS)" },
+            { roll: "GU25R1870", name: "ADEEBA GAUR", topic: "Student Result Management System (Java)" },
+            { roll: "GU25R1330", name: "AKASH KUMAR", topic: "Automated Email/Circular Bot (Python)" },
+            { roll: "GU25R0376", name: "IKRA ALI", topic: "Personal Portfolio Website (React JS)" },
+            { roll: "GU25R0362", name: "MOHD ABBAS ZAIDI", topic: "Library Management System (Java)" },
+            { roll: "GU25R0371", name: "RITIK", topic: "Real-time Weather Dashboard (Python)" },
+            { roll: "GU25R0360", name: "MOHD MUFEED", topic: "Fitness Tracker Mobile App (React Native)" },
+            { roll: "GU25R0370", name: "SHIVAM KUMAR", topic: "Employee Management System (Java)" },
+            { roll: "GU25R1548", name: "FAREED", topic: "Expense Tracker & Visualization (Python)" },
+            { roll: "GU25R1922", name: "SHEKHAR", topic: "Medical Appointment Booking App (JS)" },
+            { roll: "GU25R0367", name: "GAURAV SHARMA", topic: "Online Food Ordering API (Java)" },
+            { roll: "GU25R1966", name: "NIKHIL SAINI", topic: "Blockchainbased -E-Voting System (Python)" },
+            { roll: "GU25R1686", name: "ASAD MALIK", topic: "Bill/Invoice Generator Website (JS)" },
+            { roll: "GU25R0354", name: "JAINAB", topic: "Smart Attendance System (Java)" },
+            { roll: "GU25R1886", name: "SAMREEN", topic: "Student Performance Predictor (Python/ML)" },
+            { roll: "GU25R2220", name: "MOHD SUHAIL", topic: "Lab Inventory Management (Science/Java)" },
+            { roll: "GU25R2102", name: "MOHD RAHMAN", topic: "E-Commerce Front-end (React JS)" },
+            { roll: "GU25R2300", name: "NAZMEEN UNEZA", topic: "Scientific Calculator Mobile App (Java/JS)" },
+            { roll: "GU25R0857", name: "MOHD ANAS", topic: "Student Result Management System (Java)" },
+            { roll: "GU25R0631", name: "MOHD YASIR ARFAAT", topic: "Al-Powered Resume Screener (Python)" },
+            { roll: "GU25R2256", name: "HIMANSHU", topic: "Real-time Chat App / WhatsApp Clone (JS)" },
+            { roll: "GU25R2257", name: "OMVESH CHOUDHARY", topic: "Library Management System (Java)" },
+            { roll: "GU25R2253", name: "YASHWANT RANA", topic: "Automated Email/Circular Bot (Python)" },
+            { roll: "GU25R2442", name: "ABDAAL", topic: "Personal Portfolio Website (React JS)" },
+            { roll: "GU25R1370", name: "KHUSHI NARAYAN", topic: "Employee Management System (Java)" },
+            { roll: "GU25R2018", name: "OSAMA GOUR", topic: "Real-time Weather Dashboard (Python)" },
+            { roll: "GU25R2475", name: "VIJAY SHARMA", topic: "Medical Appointment Booking App (JS)" },
+            { roll: "GU25R1724", name: "SANA ANJUM", topic: "Smart Attendance System (Java)" }
         ];
 
         const app = initializeApp(firebaseConfig);
@@ -180,16 +222,22 @@
         const ADMIN_PASS = "admin123";
         let submissions = [];
 
-        // Autocomplete Logic
+        // UI View Management
+        const views = { submit: document.getElementById('view-submit'), success: document.getElementById('view-success'), login: document.getElementById('view-login'), dashboard: document.getElementById('view-dashboard') };
+        const showView = (name) => { Object.keys(views).forEach(k => views[k].classList.add('hide')); views[name].classList.remove('hide'); };
+        document.getElementById('nav-submit').onclick = () => showView('submit');
+        document.getElementById('nav-admin').onclick = () => showView('login');
+
+        // Roll Number Autocomplete and Topic Fetch
         const rollInput = document.getElementById('rollNo');
         const nameInput = document.getElementById('studentName');
+        const topicInput = document.getElementById('projectName');
         const listDiv = document.getElementById('autocomplete-list');
 
         rollInput.oninput = function() {
             const val = this.value;
             listDiv.innerHTML = "";
             if (!val) { listDiv.classList.add('hide'); return; }
-            
             const matches = STUDENT_LIST.filter(s => s.roll.toLowerCase().startsWith(val.toLowerCase()));
             if (matches.length > 0) {
                 listDiv.classList.remove('hide');
@@ -199,67 +247,63 @@
                     item.onclick = () => {
                         rollInput.value = m.roll;
                         nameInput.value = m.name;
+                        topicInput.value = m.topic;
                         listDiv.classList.add('hide');
                     };
                     listDiv.appendChild(item);
                 });
-            } else {
-                listDiv.classList.add('hide');
-            }
+            } else { listDiv.classList.add('hide'); }
         };
 
-        // Views and Navigation
-        const views = { submit: document.getElementById('view-submit'), success: document.getElementById('view-success'), login: document.getElementById('view-login'), dashboard: document.getElementById('view-dashboard') };
-        const showView = (name) => { Object.keys(views).forEach(k => views[k].classList.add('hide')); views[name].classList.remove('hide'); };
-        document.getElementById('nav-submit').onclick = () => showView('submit');
-        document.getElementById('nav-admin').onclick = () => showView('login');
-
-        // File Selection UI
+        // File Selection Feedback
         ['ppt', 'report', 'code'].forEach(k => {
             document.getElementById(`file-${k}`).onchange = function() {
                 const label = document.getElementById(`label-${k}`);
-                if (this.files[0]) label.classList.add('bg-blue-50', 'border-blue-500');
+                if (this.files[0]) {
+                    label.classList.add('bg-blue-50', 'border-blue-400');
+                    label.querySelector('i').className = "fas fa-check-circle text-blue-600 text-3xl mb-3";
+                }
             };
         });
 
-        // Upload Helper
+        // Cloud Storage Upload Helper
         const uploadFile = (file, folder) => {
             return new Promise((resolve, reject) => {
-                const path = `${folder}/${Date.now()}_${file.name}`;
+                const path = `mca_projects/${folder}/${Date.now()}_${file.name}`;
                 const storageRef = ref(storage, path);
                 const uploadTask = uploadBytesResumable(storageRef, file);
-
                 uploadTask.on('state_changed', 
-                    (snapshot) => {
-                        const progress = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
+                    (snap) => {
+                        const progress = (snap.bytesTransferred / snap.totalBytes) * 100;
                         document.getElementById('progress-bar').style.width = progress + '%';
+                        document.getElementById('progress-text').innerText = Math.round(progress) + '%';
                     }, 
-                    (error) => reject(error), 
-                    () => { getDownloadURL(uploadTask.snapshot.ref).then((url) => resolve({ url, name: file.name })); }
+                    (err) => reject(err), 
+                    () => { getDownloadURL(uploadTask.snapshot.ref).then(url => resolve({ url, name: file.name })); }
                 );
             });
         };
 
-        // Submission
+        // Form Submit
         document.getElementById('submission-form').onsubmit = async (e) => {
             e.preventDefault();
             const btn = document.getElementById('btn-submit');
-            const progress = document.getElementById('upload-progress');
-            
+            const statusDiv = document.getElementById('upload-status');
             const title = document.getElementById('projectName').value.trim();
+            
             const fPpt = document.getElementById('file-ppt').files[0];
             const fReport = document.getElementById('file-report').files[0];
             const fCode = document.getElementById('file-code').files[0];
 
-            if (!fPpt || !fReport || !fCode) return alert("Select all files.");
+            if (!fPpt || !fReport || !fCode) return alert("All deliverables (PPT, PDF, ZIP) are mandatory.");
             
             btn.disabled = true;
-            progress.classList.remove('hide');
+            statusDiv.classList.remove('hide');
 
             try {
                 await signInAnonymously(auth);
                 const snap = await getDocs(query(collection(db, "submissions"), where("projectName", "==", title)));
-                if (!snap.empty) { btn.disabled = false; return alert("Title already used."); }
+                if (!snap.empty) { btn.disabled = false; statusDiv.classList.add('hide'); return alert("Title already recorded."); }
 
                 const ppt = await uploadFile(fPpt, 'ppt');
                 const report = await uploadFile(fReport, 'reports');
@@ -275,37 +319,55 @@
                 });
                 showView('success');
             } catch (err) {
-                alert("Upload error. Ensure Storage is enabled in Firebase.");
+                console.error(err);
+                alert("Upload failed. Verify Firebase Storage rules.");
                 btn.disabled = false;
+                statusDiv.classList.add('hide');
             }
         };
 
-        // Dashboard
+        // Dashboard View
         document.getElementById('login-form').onsubmit = (e) => {
             e.preventDefault();
             if (document.getElementById('admin-pass').value === ADMIN_PASS) showView('dashboard');
-            else alert("Invalid Key");
+            else alert("Authorisation Denied");
         };
 
         onSnapshot(query(collection(db, "submissions")), (snap) => {
             submissions = snap.docs.map(doc => ({ id: doc.id, ...doc.data() }));
-            document.getElementById('counter').innerText = `${submissions.length} Records Found`;
+            submissions.sort((a,b) => new Date(b.timestamp) - new Date(a.timestamp));
+            document.getElementById('counter').innerText = `${submissions.length} Projects Filed`;
             const body = document.getElementById('table-body');
             body.innerHTML = submissions.map(s => `
-                <tr class="hover:bg-slate-50">
-                    <td class="px-10 py-6"><strong>${s.studentName}</strong><br><span class="text-[9px] text-slate-400 uppercase">${s.rollNo}</span></td>
-                    <td class="px-10 py-6 font-bold text-slate-700">${s.projectName}</td>
+                <tr class="hover:bg-slate-50 transition-all duration-300">
                     <td class="px-10 py-6">
-                        <div class="flex justify-center gap-2">
-                            <a href="${s.pptUrl}" target="_blank" class="w-10 h-10 bg-slate-100 rounded flex items-center justify-center text-orange-600"><i class="fas fa-file-powerpoint"></i></a>
-                            <a href="${s.reportUrl}" target="_blank" class="w-10 h-10 bg-slate-100 rounded flex items-center justify-center text-blue-600"><i class="fas fa-file-pdf"></i></a>
-                            <a href="${s.codeUrl}" target="_blank" class="w-10 h-10 bg-slate-100 rounded flex items-center justify-center text-emerald-600"><i class="fas fa-file-code"></i></a>
+                        <div class="font-bold text-slate-800 text-base">${s.studentName}</div>
+                        <div class="text-[10px] text-slate-400 font-bold uppercase tracking-widest mt-1">${s.rollNo}</div>
+                    </td>
+                    <td class="px-10 py-6">
+                        <div class="font-bold text-slate-700 max-w-sm truncate text-sm">${s.projectName}</div>
+                        ${s.githubLink ? `<a href="${s.githubLink}" target="_blank" class="text-[10px] text-blue-600 font-black uppercase tracking-widest mt-2 inline-flex items-center gap-1 hover:underline"><i class="fab fa-github"></i> Repository</a>` : ''}
+                    </td>
+                    <td class="px-10 py-6 text-center">
+                        <div class="flex justify-center gap-3">
+                            <a href="${s.pptUrl}" target="_blank" class="w-12 h-12 bg-slate-100 rounded-2xl text-orange-600 flex items-center justify-center hover:bg-orange-600 hover:text-white transition-all shadow-sm"><i class="fas fa-file-powerpoint text-lg"></i></a>
+                            <a href="${s.reportUrl}" target="_blank" class="w-12 h-12 bg-slate-100 rounded-2xl text-blue-600 flex items-center justify-center hover:bg-blue-600 hover:text-white transition-all shadow-sm"><i class="fas fa-file-pdf text-lg"></i></a>
+                            <a href="${s.codeUrl}" target="_blank" class="w-12 h-12 bg-slate-100 rounded-2xl text-emerald-600 flex items-center justify-center hover:bg-emerald-600 hover:text-white transition-all shadow-sm"><i class="fas fa-file-code text-lg"></i></a>
                         </div>
                     </td>
-                    <td class="px-10 py-6 text-right text-[10px] text-slate-400 font-bold">${new Date(s.timestamp).toLocaleDateString()}</td>
+                    <td class="px-10 py-6 text-right font-black text-slate-400 text-[11px] tracking-widest">
+                        ${new Date(s.timestamp).toLocaleDateString()}
+                    </td>
                 </tr>
             `).join('');
         });
+
+        document.getElementById('btn-export').onclick = () => {
+            const csv = ["Candidate,ID,Title,Github,Date", ...submissions.map(s => `"${s.studentName}","${s.rollNo}","${s.projectName}","${s.githubLink}","${s.timestamp}"`)].join("\n");
+            const blob = new Blob([csv], { type: 'text/csv' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a'); a.href = url; a.download = "MCA_Submissions_Export.csv"; a.click();
+        };
     </script>
 </body>
 </html>
