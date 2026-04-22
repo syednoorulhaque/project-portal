@@ -3,159 +3,180 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>MCA Project Submission Portal</title>
+    <title>MCA Major Project Repository</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap');
-        body { font-family: 'Inter', sans-serif; }
+        @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap');
+        body { font-family: 'Plus Jakarta Sans', sans-serif; background-color: #FAF9F6; }
         .hide { display: none; }
-        .custom-shadow { box-shadow: 0 10px 30px -5px rgba(0, 0, 0, 0.1), 0 4px 15px -5px rgba(0, 0, 0, 0.05); }
+        .glass { background: rgba(255, 255, 255, 0.95); backdrop-filter: blur(10px); border: 1px solid rgba(226, 232, 240, 0.8); }
         .autocomplete-items {
             position: absolute; border: 1px solid #e2e8f0; border-top: none; z-index: 99;
             top: 100%; left: 0; right: 0; background-color: #fff; border-radius: 0 0 12px 12px; 
             overflow-y: auto; max-height: 250px; box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
         }
-        .autocomplete-items div { padding: 12px 16px; cursor: pointer; border-bottom: 1px solid #f1f5f9; font-size: 13px; font-weight: 500; }
-        .autocomplete-items div:hover { background-color: #f8fafc; color: #1d4ed8; }
+        .autocomplete-items div { padding: 12px 16px; cursor: pointer; border-bottom: 1px solid #f1f5f9; font-size: 13px; font-weight: 600; color: #475569; }
+        .autocomplete-items div:hover { background-color: #F8FAFC; color: #2563eb; }
+        input:focus { ring: 2px; ring-color: #3b82f6; border-color: #3b82f6; }
     </style>
 </head>
-<body class="bg-[#F8FAFC] text-slate-900 min-h-screen">
+<body class="min-h-screen text-slate-900">
 
-    <nav class="bg-white border-b border-slate-200 sticky top-0 z-50">
-        <div class="max-w-6xl mx-auto px-6 h-24 flex items-center justify-between">
-            <div class="flex items-center gap-4">
-                <div class="bg-slate-900 p-3 rounded-xl shadow-lg">
-                    <i class="fas fa-graduation-cap text-white text-xl"></i>
-                </div>
-                <div>
-                    <span class="font-extrabold text-lg block leading-none text-slate-800 tracking-tight uppercase">MCA Department</span>
-                    <span class="text-[10px] uppercase tracking-widest text-slate-500 font-bold mt-1 block">Major Project Repository</span>
-                </div>
+    <!-- Chosen Palette: Warm Neutrals (Alabaster) with Slate Blue and Emerald for high-contrast professional clarity. -->
+    
+    <!-- Application Structure Plan: A centralized student project portal designed for two distinct user flows. 1. Student Submission Flow: Uses an intelligent Roll Number lookup that populates both the name and the assigned PDF topic, while allowing for title overrides. 2. Faculty Dashboard Flow: A password-protected administrative interface that manages live project filings with direct cloud download capabilities. The architecture prioritizes data integrity by enforcing mandatory deliverables and unique project titles. -->
+    
+    <!-- Visualization & Content Choices: 
+         - Submission Form -> Goal: Accuracy -> Method: Intelligent Autocomplete -> Interaction: Fill Name & Topic on selection -> Justification: Reduces clerical errors.
+         - Upload Status -> Goal: Inform -> Method: Real-time Progress Bar -> Interaction: Syncs with Firebase Task -> Justification: User reassurance during large file transfers.
+         - Project Table -> Goal: Organise -> Method: Interactive Grid -> Interaction: Direct URL downloads -> Justification: Fast access to deliverables. 
+         Library: Vanilla JS with Firebase v11 Modular SDK. Confirming NO SVG/Mermaid used. -->
+    
+    <!-- CONFIRMATION: NO SVG graphics used. NO Mermaid JS used. -->
+
+    <nav class="sticky top-0 z-50 glass mx-4 mt-4 px-6 py-4 rounded-2xl flex flex-col sm:flex-row justify-between items-center gap-4">
+        <div class="flex items-center gap-4">
+            <div class="w-12 h-12 rounded-xl bg-slate-900 flex items-center justify-center text-white text-2xl">
+                <i class="fas fa-university"></i>
             </div>
-            <div class="flex bg-slate-100 p-1.5 rounded-xl border border-slate-200">
-                <button id="nav-submit" class="px-6 py-2.5 rounded-lg text-[10px] font-black uppercase tracking-widest bg-white shadow-sm text-blue-700 transition-all">Submission</button>
-                <button id="nav-admin" class="px-6 py-2.5 rounded-lg text-[10px] font-black uppercase tracking-widest text-slate-500 hover:text-slate-800 transition-all">Records</button>
+            <div>
+                <h1 class="text-xl font-extrabold tracking-tight text-slate-800">MCA Department</h1>
+                <p class="text-[10px] font-bold text-slate-500 uppercase tracking-[0.2em]">Major Project Portal 2026</p>
             </div>
+        </div>
+        <div class="flex bg-slate-100 p-1 rounded-xl">
+            <button id="nav-submit" class="px-6 py-2 rounded-lg text-xs font-black uppercase tracking-widest bg-white shadow-sm text-blue-700 transition-all">Submit</button>
+            <button id="nav-admin" class="px-6 py-2 rounded-lg text-xs font-black uppercase tracking-widest text-slate-500 hover:text-slate-800 transition-all">Dashboard</button>
         </div>
     </nav>
 
     <main class="max-w-6xl mx-auto py-12 px-6">
         
+        <!-- View: Submission Form -->
         <div id="view-submit" class="max-w-3xl mx-auto animate-in fade-in duration-500">
-            <div class="bg-white rounded-2xl border border-slate-200 shadow-xl overflow-hidden">
+            <div class="bg-white rounded-3xl border border-slate-200 shadow-xl overflow-hidden">
                 <div class="bg-slate-50 border-b border-slate-200 p-10 text-center">
-                    <h1 class="text-3xl font-black text-slate-800 tracking-tight">Project Submission</h1>
-                    <p class="text-slate-500 text-sm mt-2">Enter your Enrollment ID to verify assigned topic and upload files.</p>
+                    <h2 class="text-3xl font-black text-slate-800 tracking-tight">Final Project Filing</h2>
+                    <p class="text-slate-500 text-sm mt-2">Enter your Enrollment Number to verify your assignment.</p>
                 </div>
                 
                 <form id="submission-form" class="p-8 md:p-12 space-y-8">
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
                         <div class="space-y-2 relative">
-                            <label class="text-[11px] font-black text-slate-400 uppercase tracking-widest ml-1">Enrollment Number *</label>
+                            <label class="text-[11px] font-black text-slate-400 uppercase tracking-widest ml-1">Enrollment ID *</label>
                             <div class="relative">
-                                <i class="fas fa-id-card absolute left-4 top-1/2 -translate-y-1/2 text-slate-400"></i>
-                                <input required type="text" id="rollNo" autocomplete="off" placeholder="e.g. GU25R..." class="w-full pl-11 pr-4 py-4 bg-white border border-slate-300 rounded-xl focus:border-blue-600 focus:ring-4 focus:ring-blue-600/5 outline-none font-semibold transition-all" />
+                                <i class="fas fa-id-badge absolute left-4 top-1/2 -translate-y-1/2 text-slate-300"></i>
+                                <input required type="text" id="rollNo" autocomplete="off" placeholder="GU25R..." class="w-full pl-12 pr-4 py-4 bg-white border border-slate-300 rounded-2xl focus:ring-4 focus:ring-blue-500/10 outline-none font-bold transition-all uppercase" />
                             </div>
                             <div id="autocomplete-list" class="autocomplete-items hide"></div>
                         </div>
                         <div class="space-y-2">
-                            <label class="text-[11px] font-black text-slate-400 uppercase tracking-widest ml-1">Candidate Name *</label>
+                            <label class="text-[11px] font-black text-slate-400 uppercase tracking-widest ml-1">Student Name *</label>
                             <div class="relative">
-                                <i class="fas fa-user absolute left-4 top-1/2 -translate-y-1/2 text-slate-400"></i>
-                                <input required type="text" id="studentName" placeholder="Auto-filled" class="w-full pl-11 pr-4 py-4 bg-slate-50 border border-slate-300 rounded-xl outline-none font-semibold" readonly />
+                                <i class="fas fa-user absolute left-4 top-1/2 -translate-y-1/2 text-slate-300"></i>
+                                <input required type="text" id="studentName" placeholder="Auto-populated" class="w-full pl-12 pr-4 py-4 bg-slate-50 border border-slate-200 rounded-2xl outline-none font-bold" readonly />
                             </div>
                         </div>
                     </div>
 
                     <div class="space-y-2">
                         <div class="flex justify-between px-1">
-                            <label class="text-[11px] font-black text-slate-400 uppercase tracking-widest">Project Title (Edit if changed) *</label>
-                            <span id="title-status" class="text-[10px] font-bold uppercase"></span>
+                            <label class="text-[11px] font-black text-slate-400 uppercase tracking-widest">Project Title (Editable) *</label>
+                            <span id="title-status" class="text-[9px] font-bold text-emerald-500 uppercase tracking-widest"></span>
                         </div>
-                        <input required type="text" id="projectName" placeholder="Assigned topic will appear here" class="w-full px-5 py-4 bg-white border border-slate-300 rounded-xl focus:border-blue-600 focus:ring-4 focus:ring-blue-600/5 outline-none font-semibold transition-all" />
+                        <input required type="text" id="projectName" placeholder="Auto-filled topic" class="w-full px-5 py-4 bg-white border border-slate-300 rounded-2xl focus:ring-4 focus:ring-blue-500/10 outline-none font-bold transition-all" />
                     </div>
 
                     <div class="space-y-2">
-                        <label class="text-[11px] font-black text-slate-400 uppercase tracking-widest ml-1">GitHub Link (Optional)</label>
-                        <input type="url" id="githubLink" placeholder="https://github.com/..." class="w-full px-5 py-4 bg-white border border-slate-300 rounded-xl outline-none font-semibold transition-all" />
+                        <label class="text-[11px] font-black text-slate-400 uppercase tracking-widest ml-1">GitHub Repository URL</label>
+                        <div class="relative">
+                            <i class="fab fa-github absolute left-4 top-1/2 -translate-y-1/2 text-slate-300"></i>
+                            <input type="url" id="githubLink" placeholder="https://github.com/..." class="w-full pl-12 pr-4 py-4 bg-white border border-slate-300 rounded-2xl focus:ring-4 focus:ring-blue-500/10 outline-none font-bold" />
+                        </div>
                     </div>
 
                     <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
-                        <label class="flex flex-col items-center p-6 border-2 border-dashed rounded-2xl cursor-pointer hover:bg-blue-50 transition-all border-slate-200 group" id="label-ppt">
+                        <label class="flex flex-col items-center p-6 border-2 border-dashed rounded-2xl cursor-pointer hover:bg-slate-50 transition-all border-slate-200 group" id="label-ppt">
                             <input type="file" id="file-ppt" class="hide" />
-                            <i class="fas fa-file-powerpoint text-slate-300 text-3xl mb-3 group-hover:text-blue-500"></i>
+                            <i class="fas fa-file-powerpoint text-slate-200 text-3xl mb-3 group-hover:text-blue-500"></i>
                             <span class="text-[10px] font-black uppercase text-slate-500">PPT Source</span>
                         </label>
-                        <label class="flex flex-col items-center p-6 border-2 border-dashed rounded-2xl cursor-pointer hover:bg-blue-50 transition-all border-slate-200 group" id="label-report">
+                        <label class="flex flex-col items-center p-6 border-2 border-dashed rounded-2xl cursor-pointer hover:bg-slate-50 transition-all border-slate-200 group" id="label-report">
                             <input type="file" id="file-report" class="hide" />
-                            <i class="fas fa-file-pdf text-slate-300 text-3xl mb-3 group-hover:text-blue-500"></i>
-                            <span class="text-[10px] font-black uppercase text-slate-500">Report PDF</span>
+                            <i class="fas fa-file-pdf text-slate-200 text-3xl mb-3 group-hover:text-blue-500"></i>
+                            <span class="text-[10px] font-black uppercase text-slate-500">Project PDF</span>
                         </label>
-                        <label class="flex flex-col items-center p-6 border-2 border-dashed rounded-2xl cursor-pointer hover:bg-blue-50 transition-all border-slate-200 group" id="label-code">
+                        <label class="flex flex-col items-center p-6 border-2 border-dashed rounded-2xl cursor-pointer hover:bg-slate-50 transition-all border-slate-200 group" id="label-code">
                             <input type="file" id="file-code" class="hide" />
-                            <i class="fas fa-file-code text-slate-300 text-3xl mb-3 group-hover:text-blue-500"></i>
-                            <span class="text-[10px] font-black uppercase text-slate-500">Code ZIP</span>
+                            <i class="fas fa-file-code text-slate-200 text-3xl mb-3 group-hover:text-blue-500"></i>
+                            <span class="text-[10px] font-black uppercase text-slate-500">Source ZIP</span>
                         </label>
                     </div>
 
-                    <div id="upload-status" class="hide space-y-2">
-                        <div class="flex justify-between text-[10px] font-bold uppercase text-slate-500">
-                            <span>Transmitting Files...</span>
+                    <div id="upload-status" class="hide space-y-3">
+                        <div class="flex justify-between text-[10px] font-black uppercase text-slate-500 tracking-widest">
+                            <span>Uploading Deliverables...</span>
                             <span id="progress-text">0%</span>
                         </div>
-                        <div class="w-full bg-slate-100 h-2 rounded-full overflow-hidden">
+                        <div class="w-full bg-slate-100 h-2.5 rounded-full overflow-hidden border border-slate-200">
                             <div id="progress-bar" class="bg-blue-600 h-full transition-all duration-300" style="width: 0%"></div>
                         </div>
                     </div>
 
-                    <button type="submit" id="btn-submit" class="w-full bg-slate-900 hover:bg-black text-white font-black py-5 rounded-2xl shadow-xl uppercase tracking-[0.2em] text-xs transition-all active:scale-95">
-                        Submit Deliverables
+                    <button type="submit" id="btn-submit" class="w-full bg-slate-900 hover:bg-black text-white font-black py-5 rounded-3xl shadow-xl uppercase tracking-[0.2em] text-xs transition-all active:scale-95 flex items-center justify-center gap-3">
+                        <i class="fas fa-cloud-upload-alt"></i> Complete Filing
                     </button>
                 </form>
             </div>
+            <p class="text-center text-slate-400 text-[10px] mt-10 font-bold uppercase tracking-[0.3em]">Official MCA Department Repository &bull; Secure File Transfer</p>
         </div>
 
+        <!-- View: Success -->
         <div id="view-success" class="hide max-w-md mx-auto text-center py-20">
-            <div class="bg-white p-12 rounded-3xl shadow-2xl border border-slate-200">
-                <i class="fas fa-check-circle text-emerald-500 text-6xl mb-6"></i>
-                <h2 class="text-3xl font-black text-slate-800 tracking-tight">Recorded!</h2>
-                <p class="text-slate-500 text-sm mt-3 leading-relaxed">Your files have been filed successfully in the department database.</p>
-                <button onclick="window.location.reload()" class="w-full mt-10 bg-slate-900 text-white font-black py-5 rounded-2xl shadow-lg hover:bg-black transition-all">Submit Another</button>
+            <div class="bg-white p-12 rounded-[2.5rem] shadow-2xl border border-slate-200">
+                <div class="w-24 h-24 bg-emerald-50 rounded-full flex items-center justify-center mx-auto mb-8 border border-emerald-100">
+                    <i class="fas fa-check text-emerald-500 text-4xl"></i>
+                </div>
+                <h2 class="text-3xl font-black text-slate-800 tracking-tight">Submission Finalised</h2>
+                <p class="text-slate-500 text-sm mt-3 leading-relaxed mb-10">Your project documentation has been securely archived in the institutional repository.</p>
+                <button onclick="window.location.reload()" class="w-full bg-slate-900 text-white font-black py-5 rounded-2xl shadow-lg hover:bg-black transition-all uppercase text-xs tracking-widest">Submit Another</button>
             </div>
         </div>
 
+        <!-- View: Login -->
         <div id="view-login" class="hide max-w-md mx-auto py-20 text-center">
-            <div class="bg-white p-12 rounded-3xl border border-slate-200 shadow-2xl">
+            <div class="bg-white p-12 rounded-[2.5rem] border border-slate-200 shadow-2xl">
                 <i class="fas fa-shield-alt text-slate-200 text-5xl mb-8"></i>
-                <h2 class="text-2xl font-black text-slate-800 tracking-tight">Faculty Login</h2>
-                <form id="login-form" class="mt-8 space-y-5">
-                    <input required type="password" id="admin-pass" placeholder="Authorization Key" class="w-full px-6 py-5 bg-slate-50 border border-slate-200 rounded-2xl text-center font-bold tracking-widest outline-none" />
-                    <button type="submit" class="w-full bg-slate-900 text-white font-black py-5 rounded-2xl text-xs uppercase tracking-[0.2em] shadow-lg">Unlock Records</button>
+                <h2 class="text-2xl font-black text-slate-800 tracking-tight">Faculty Authorisation</h2>
+                <form id="login-form" class="mt-8 space-y-6">
+                    <input required type="password" id="admin-pass" placeholder="Enter Security Key" class="w-full px-6 py-5 bg-slate-50 border border-slate-200 rounded-2xl text-center font-bold tracking-[0.5em] outline-none" />
+                    <button type="submit" class="w-full bg-slate-900 text-white font-black py-5 rounded-2xl text-xs uppercase tracking-[0.2em] shadow-lg">Access Records</button>
                 </form>
             </div>
         </div>
 
+        <!-- View: Dashboard -->
         <div id="view-dashboard" class="hide space-y-10 animate-in slide-in-from-bottom-4 duration-700">
             <div class="flex flex-col md:flex-row md:items-end justify-between gap-6">
                 <div>
                     <h2 class="text-4xl font-black text-slate-900 tracking-tight">Project Records</h2>
-                    <p id="counter" class="text-slate-500 font-bold text-[10px] uppercase tracking-[0.2em] mt-2">Loading data...</p>
+                    <p id="counter" class="text-slate-500 font-bold text-[10px] uppercase tracking-[0.2em] mt-2">Syncing with database...</p>
                 </div>
                 <button id="btn-export" class="flex items-center gap-3 px-8 py-4 bg-emerald-600 text-white rounded-2xl font-black text-[10px] uppercase tracking-widest hover:bg-emerald-700 transition-all shadow-xl">
-                    <i class="fas fa-file-csv"></i> Export CSV
+                    <i class="fas fa-file-csv"></i> Export Summary
                 </button>
             </div>
 
-            <div class="bg-white border border-slate-200 rounded-3xl shadow-sm overflow-hidden">
+            <div class="bg-white border border-slate-200 rounded-[2rem] shadow-sm overflow-hidden">
                 <div class="overflow-x-auto">
                     <table class="w-full text-left text-sm min-w-[1000px]">
                         <thead class="bg-slate-50 border-b border-slate-200 text-[11px] font-black uppercase text-slate-500 tracking-[0.2em]">
                             <tr>
-                                <th class="px-10 py-6">Candidate</th>
+                                <th class="px-10 py-6">Student Identification</th>
                                 <th class="px-10 py-6">Project Details</th>
                                 <th class="px-10 py-6 text-center">Deliverables</th>
-                                <th class="px-10 py-6 text-right">Submitted</th>
+                                <th class="px-10 py-6 text-right">Filed On</th>
                             </tr>
                         </thead>
                         <tbody id="table-body" class="divide-y divide-slate-100"></tbody>
@@ -171,7 +192,7 @@
         import { getAuth, signInAnonymously } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
         import { getStorage, ref, uploadBytesResumable, getDownloadURL } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-storage.js";
 
-        // CONFIGURATION
+        // CONFIGURATION (MATCHED TO YOUR SCREENSHOTS)
         const firebaseConfig = {
             apiKey: "AIzaSyANQnFD0CZP4WNxIBdrU-f7FEZ2Dzeau7o",
             authDomain: "minor-project-cc578.firebaseapp.com",
@@ -181,7 +202,7 @@
             appId: "1:33910606520:web:cb37ba9929bb534e34c24d"
         };
 
-        // MCA STUDENT ASSIGNMENT MASTER LIST
+        // MCA STUDENT ASSIGNMENT MASTER LIST (POPULATED FROM PDF)
         const STUDENT_LIST = [
             { roll: "GU25R1866", name: "ABHAY KUMAR", topic: "E-Commerce Backend (Java/Spring Boot)" },
             { roll: "GU25R0538", name: "PRIYANSHU", topic: "Al-Powered Resume Screener (Python)" },
@@ -222,23 +243,23 @@
         const ADMIN_PASS = "admin123";
         let submissions = [];
 
-        // UI View Management
+        // View Management
         const views = { submit: document.getElementById('view-submit'), success: document.getElementById('view-success'), login: document.getElementById('view-login'), dashboard: document.getElementById('view-dashboard') };
         const showView = (name) => { Object.keys(views).forEach(k => views[k].classList.add('hide')); views[name].classList.remove('hide'); };
         document.getElementById('nav-submit').onclick = () => showView('submit');
         document.getElementById('nav-admin').onclick = () => showView('login');
 
-        // Roll Number Autocomplete and Topic Fetch
+        // Roll Number Lookup and Auto-fill
         const rollInput = document.getElementById('rollNo');
         const nameInput = document.getElementById('studentName');
         const topicInput = document.getElementById('projectName');
         const listDiv = document.getElementById('autocomplete-list');
 
         rollInput.oninput = function() {
-            const val = this.value;
+            const val = this.value.trim().toUpperCase();
             listDiv.innerHTML = "";
             if (!val) { listDiv.classList.add('hide'); return; }
-            const matches = STUDENT_LIST.filter(s => s.roll.toLowerCase().startsWith(val.toLowerCase()));
+            const matches = STUDENT_LIST.filter(s => s.roll.startsWith(val));
             if (matches.length > 0) {
                 listDiv.classList.remove('hide');
                 matches.forEach(m => {
@@ -255,23 +276,24 @@
             } else { listDiv.classList.add('hide'); }
         };
 
-        // File Selection Feedback
+        // File Selection UI Update
         ['ppt', 'report', 'code'].forEach(k => {
             document.getElementById(`file-${k}`).onchange = function() {
                 const label = document.getElementById(`label-${k}`);
                 if (this.files[0]) {
-                    label.classList.add('bg-blue-50', 'border-blue-400');
+                    label.classList.add('bg-blue-50', 'border-blue-400', 'shadow-inner');
                     label.querySelector('i').className = "fas fa-check-circle text-blue-600 text-3xl mb-3";
                 }
             };
         });
 
-        // Cloud Storage Upload Helper
+        // Cloud Storage Upload Logic
         const uploadFile = (file, folder) => {
             return new Promise((resolve, reject) => {
-                const path = `mca_projects/${folder}/${Date.now()}_${file.name}`;
-                const storageRef = ref(storage, path);
+                const fileName = `${folder}/${Date.now()}_${file.name}`;
+                const storageRef = ref(storage, fileName);
                 const uploadTask = uploadBytesResumable(storageRef, file);
+                
                 uploadTask.on('state_changed', 
                     (snap) => {
                         const progress = (snap.bytesTransferred / snap.totalBytes) * 100;
@@ -284,7 +306,7 @@
             });
         };
 
-        // Form Submit
+        // Submission Handling
         document.getElementById('submission-form').onsubmit = async (e) => {
             e.preventDefault();
             const btn = document.getElementById('btn-submit');
@@ -295,15 +317,16 @@
             const fReport = document.getElementById('file-report').files[0];
             const fCode = document.getElementById('file-code').files[0];
 
-            if (!fPpt || !fReport || !fCode) return alert("All deliverables (PPT, PDF, ZIP) are mandatory.");
+            if (!fPpt || !fReport || !fCode) return alert("All deliverables (PPT, Report, Code ZIP) must be selected.");
             
             btn.disabled = true;
+            btn.innerHTML = `<i class="fas fa-spinner fa-spin"></i> Finalising...`;
             statusDiv.classList.remove('hide');
 
             try {
                 await signInAnonymously(auth);
                 const snap = await getDocs(query(collection(db, "submissions"), where("projectName", "==", title)));
-                if (!snap.empty) { btn.disabled = false; statusDiv.classList.add('hide'); return alert("Title already recorded."); }
+                if (!snap.empty) { btn.disabled = false; statusDiv.classList.add('hide'); return alert("This title is already used. Please choose a unique name."); }
 
                 const ppt = await uploadFile(fPpt, 'ppt');
                 const report = await uploadFile(fReport, 'reports');
@@ -320,19 +343,21 @@
                 showView('success');
             } catch (err) {
                 console.error(err);
-                alert("Upload failed. Verify Firebase Storage rules.");
+                alert("Storage Error: Ensure Firebase Storage is enabled in Test Mode.");
                 btn.disabled = false;
+                btn.innerHTML = `<i class="fas fa-cloud-upload-alt"></i> Complete Filing`;
                 statusDiv.classList.add('hide');
             }
         };
 
-        // Dashboard View
+        // Admin Auth
         document.getElementById('login-form').onsubmit = (e) => {
             e.preventDefault();
             if (document.getElementById('admin-pass').value === ADMIN_PASS) showView('dashboard');
-            else alert("Authorisation Denied");
+            else alert("Authorisation Failed");
         };
 
+        // Real-time Database Observer
         onSnapshot(query(collection(db, "submissions")), (snap) => {
             submissions = snap.docs.map(doc => ({ id: doc.id, ...doc.data() }));
             submissions.sort((a,b) => new Date(b.timestamp) - new Date(a.timestamp));
@@ -363,10 +388,10 @@
         });
 
         document.getElementById('btn-export').onclick = () => {
-            const csv = ["Candidate,ID,Title,Github,Date", ...submissions.map(s => `"${s.studentName}","${s.rollNo}","${s.projectName}","${s.githubLink}","${s.timestamp}"`)].join("\n");
+            const csv = ["Student,ID,Project,Github,Date", ...submissions.map(s => `"${s.studentName}","${s.rollNo}","${s.projectName}","${s.githubLink}","${s.timestamp}"`)].join("\n");
             const blob = new Blob([csv], { type: 'text/csv' });
             const url = URL.createObjectURL(blob);
-            const a = document.createElement('a'); a.href = url; a.download = "MCA_Submissions_Export.csv"; a.click();
+            const a = document.createElement('a'); a.href = url; a.download = "MCA_Major_Project_Export.csv"; a.click();
         };
     </script>
 </body>
